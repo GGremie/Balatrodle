@@ -1,26 +1,39 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  height: 100%;
+  
+  --foreground: #ffffff;
+  --body-light: #3E4E51;
+  --body-main: #172325FD;
+  
+  --corner-md: polygon(0px calc(100% - 12px),3px calc(100% - 12px),3px calc(100% - 6px),6px calc(100% - 6px),6px calc(100% - 3px),12px calc(100% - 3px),12px 100%,calc(100% - 12px) 100%,calc(100% - 12px) calc(100% - 3px),calc(100% - 6px) calc(100% - 3px),calc(100% - 6px) calc(100% - 6px),calc(100% - 3px) calc(100% - 6px),calc(100% - 3px) calc(100% - 12px),100% calc(100% - 12px),100% 12px,calc(100% - 3px) 12px,calc(100% - 3px) 6px,calc(100% - 6px) 6px,calc(100% - 6px) 3px,calc(100% - 12px) 3px,calc(100% - 12px) 0px,12px 0px,12px 3px,6px 3px,6px 6px,3px 6px,3px 12px,0px 12px);
+
+  --rarity-common: #0093ff;
+  --rarity-common-shadow: drop-shadow(0 3px 0 #005CAB);
+  --rarity-uncommon: #35bd86;
+  --rarity-uncommon-shadow: drop-shadow(0 3px 0 #1B7954);
+  --rarity-rare: #ff4c40;
+  --rarity-rare-shadow: drop-shadow(0 3px 0 #A92B23);
+  --rarity-legendary: #ab5bb5;
+  --rarity-legendary-shadow: drop-shadow(0 3px 0 #6D3574);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --font-balatro: 'BalatroFont', sans-serif;
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@font-face {
+  font-family: 'BalatroFont';
+  src: url(../public/fonts/balatro.otf) format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 
 body {
-  background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'BalatroFont';
+  text-shadow: 3px 4px 0 #00000087;
+  height: 100%;
 }
