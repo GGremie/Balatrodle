@@ -1,15 +1,35 @@
 'use client'
+import { useState } from "react";
 import { Joker } from "@/data/types/joker.type";
 import CardInfos from "./components/cardInfos";
 import jokerList from '@/data/jokerList.json'
 
 export default function Home() {
-  let jokers = jokerList;
-  let guessJoker: Joker = jokers[0];
+  const [jokers, setJokers] = useState(jokerList);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [guessJoker, setGuessJoker]= useState<Joker | null>(null);
+  const [guessedJokers, setGuessedJokers]= useState<Joker[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
 
-  function handleGuessClick(joker: Joker) {
-    jokers.splice(joker.id - 1, 1);
+  const filteredJokers = jokers.filter(joker =>
+    joker.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  function handleGuessClick() {
+    if (guessJoker) {
+      // jokers.splice(guessJoker.id - 1, 1);
+      setJokers(prev => prev.filter(j => j.id !== guessJoker.id));
+      setGuessedJokers([...guessedJokers, guessJoker])
+      setGuessJoker(null);
+      setSearchTerm('');
+    }
   }
+
+  const handleSelectJoker = (joker: Joker) => {
+    setGuessJoker(joker);
+    setSearchTerm(joker.name);
+    setIsSearching(false);
+  };
 
   return (
     <main className="flex justify-center h-[100%]">
@@ -18,15 +38,38 @@ export default function Home() {
           Balatrodle
         </h1>
         <div>
-          <select
-            className="basic-single"
-            name="jokerSelect"
-          ></select>
-          <button onClick={() => handleGuessClick(guessJoker)}>Guess</button>
+          <div style={{ position: 'relative' }}>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+              }}
+              onFocus={() => setIsSearching(true)}
+              placeholder="tab"
+            />
+            
+            {isSearching && filteredJokers.length > 0 && (
+              <ul>
+                {filteredJokers.map(joker => (
+                  <li 
+                    key={joker.id}
+                    onClick={() => handleSelectJoker(joker)}
+                    style={{ padding: '8px', cursor: 'pointer' }}
+                  >
+                    {joker.name}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <button onClick={handleGuessClick} disabled={!guessJoker}>
+            Guess
+          </button>
         </div>
         <div className="flex flex-col gap-10">
-          {jokers.map((joker) => {
-            return (<CardInfos joker={guessJoker} />)
+          {guessedJokers.map((joker) => {
+            return (<CardInfos joker={joker} />)
           })}
         </div>
       </div>
