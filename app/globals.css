@@ -10,23 +10,29 @@
   --corner-md: polygon(0px calc(100% - 12px),3px calc(100% - 12px),3px calc(100% - 6px),6px calc(100% - 6px),6px calc(100% - 3px),12px calc(100% - 3px),12px 100%,calc(100% - 12px) 100%,calc(100% - 12px) calc(100% - 3px),calc(100% - 6px) calc(100% - 3px),calc(100% - 6px) calc(100% - 6px),calc(100% - 3px) calc(100% - 6px),calc(100% - 3px) calc(100% - 12px),100% calc(100% - 12px),100% 12px,calc(100% - 3px) 12px,calc(100% - 3px) 6px,calc(100% - 6px) 6px,calc(100% - 6px) 3px,calc(100% - 12px) 3px,calc(100% - 12px) 0px,12px 0px,12px 3px,6px 3px,6px 6px,3px 6px,3px 12px,0px 12px);
 
   --rarity-common: #0093ff;
-  --rarity-common-shadow: drop-shadow(0 3px 0 #005CAB);
+  --rarity-common-shadow: #005CAB;
   --rarity-uncommon: #35bd86;
-  --rarity-uncommon-shadow: drop-shadow(0 3px 0 #1B7954);
+  --rarity-uncommon-shadow: #1B7954;
   --rarity-rare: #ff4c40;
-  --rarity-rare-shadow: drop-shadow(0 3px 0 #A92B23);
+  --rarity-rare-shadow: #A92B23;
   --rarity-legendary: #ab5bb5;
-  --rarity-legendary-shadow: drop-shadow(0 3px 0 #6D3574);
+  --rarity-legendary-shadow: #6D3574;
+  /*  drop-shadow(0 3px 0 #6D3574) */
+
+  --guess-close: #a18d2b;
+  --guess-correct:var(--rarity-uncommon-shadow);
+  --guess-incorrect:var(--body-light);
+  
+  --money-yellow: #f5b244;
 }
 
 @theme inline {
   --font-balatro: 'BalatroFont', sans-serif;
-  --font-sans: var(--font-geist-sans);
 }
 
 @font-face {
   font-family: 'BalatroFont';
-  src: url(../public/fonts/balatro.otf) format('truetype');
+  src: url(/fonts/balatroFont.woff2) format('woff2');
   font-weight: normal;
   font-style: normal;
 }
@@ -34,6 +40,6 @@
 body {
   color: var(--foreground);
   font-family: 'BalatroFont';
-  text-shadow: 3px 4px 0 #00000087;
+  text-shadow: 2px 2px 0 #00000087;
   height: 100%;
 }

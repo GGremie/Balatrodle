@@ -8,11 +8,6 @@ export const metadata: Metadata = {
   description: "Guess the today joker",
 };
 
-export const balatro = localFont({
-  src: '../public/fonts/balatro.otf',
-  variable: '--font-balatro',
-})
-
 export default function RootLayout({
   children,
 }: Readonly<{
