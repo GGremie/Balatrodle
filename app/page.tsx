@@ -27,7 +27,7 @@ export default function Home() {
   function handleGuessClick() {
     if (guessJoker) {
       setJokers(prev => prev.filter(j => j.id !== guessJoker.id));
-      setGuessedJokers([...guessedJokers, guessJoker])
+      setGuessedJokers([guessJoker, ...guessedJokers])
       setGuessJoker(null);
       setSearchTerm('');
     }
@@ -41,11 +41,11 @@ export default function Home() {
   
   return (
     <main className="flex justify-center h-[100%]">
-      <div className="flex flex-col items-center gap-6 bg-(--body-main) w-150 h-[100%]">
-        <h1 className="text-5xl font-semibold pt-5">
+      <div className="flex flex-col items-center gap-4 bg-(--body-main) w-[50%] h-[100%]">
+        <h1 className="text-9xl font-semibold pt-5">
           Balatrodle
         </h1>
-        <div className="flex">
+        <div className="flex text-3xl">
           <div style={{ position: 'relative' }}>
             <input
               type="text"
@@ -59,7 +59,7 @@ export default function Home() {
             />
             
             {isSearching && filteredJokers.length > 0 && (
-              <div className="flex flex-col overflow-auto absolute max-h-[14.5rem] z-1 bg-white text-black text-shadow-none">
+              <div className="flex flex-col overflow-auto absolute max-h-[20rem] z-1 bg-white text-black text-shadow-none">
                 {filteredJokers.map(joker => (
                   <span
                     key={joker.id}
@@ -76,7 +76,15 @@ export default function Home() {
             Guess
           </button>
         </div>
-        <div className="flex flex-col gap-10">
+        <div className="flex justify-between p-5 pb-0 text-3xl w-[100%]">
+          <span className="w-[12%] text-center">Joker</span>
+          <span className="w-[15%] text-center">Cost</span>
+          <span className="w-[28%] text-center">Rarity</span>
+          <span className="w-[15%] text-center">Type</span>
+          <span className="w-[15%] text-center">Scaling</span>
+          <span className="w-[15%] text-center">RNG</span>
+        </div>
+        <div className="flex flex-col gap-5 w-[100%] text-3xl">
           {guessedJokers.map((joker) => {
             return (<CardInfos joker={joker} toGuess={dailyJoker} />)
           })}

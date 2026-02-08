@@ -1,6 +1,5 @@
 import { Rarity } from "@/data/enums/rarity.enum";
 import { Joker } from "@/data/types/joker.type";
-import { escape } from "querystring";
 
 export default function CardInfos({ joker, toGuess }: { joker: Joker, toGuess: Joker }) {
     const bgBase = {
@@ -35,56 +34,39 @@ export default function CardInfos({ joker, toGuess }: { joker: Joker, toGuess: J
     }
     
     return (
-
-    <div className="flex flex-col justify-center w-100">
-        <div className="text-center">
-            {joker.name}
-        </div>
-        <div className="flex gap-10">
-            <img
-            src={`/jokerImages/${joker.name
-                .replace(/ /g, "_")
-                .replace(/'/g, "")
-                .replace(/!/g, "")
-                .replace(/é/g, "e")}.png`}
+    <div className="flex justify-center items-center pl-5 pr-5">
+        {/* <div className="w-[10%] flex justify-center"> */}
+        <img className="w-[10%] ml-[1%] mr-[1%]"
+        src={`/images/${joker.name
+            .replace(/ /g, "_")
+            .replace(/'/g, "")
+            .replace(/!/g, "")
+            .replace(/é/g, "e")}.png`}
             alt={joker.name + " Image"}
             />
-            <div className="w-full">
-                <div className="flex justify-between">
-                    <div className="size-[33%]" style={getBackground('price')}>
-                        <p className="text-center">Cost</p>
-                        <div className="flex gap-2 justify-center">
-                            <p className="text-[var(--money-yellow)]">${joker.price}</p>
-                            <p>&gt;</p>
-                        </div>
-                    </div>
-
-                    <div className="size-[66%]" style={getBackground('rarity')}>
-                        <p>Rarity</p>
-
-                        <div className="text-center" style={getRarityBackground()}>
-                            <p>{joker.rarity}</p>
-                        </div>
-                    </div>
+        <div className="flex flex-col w-[88%]">
+            <p className="text-center pb-2">
+                {joker.name}
+            </p>
+            <div className="flex w-[100%] pl-[1%] gap-[1%]">
+                <div className="flex gap-2 w-[16%] justify-center" style={getBackground('price')}>
+                    <p className="text-[var(--money-yellow)]">${joker.price}</p>
+                    <p>&gt;</p>
                 </div>
-
-                <div className="flex justify-between">
-                    <div className="size-[50%]" style={getBackground('type')}>
-                        <p>Ability</p>
-                        <p>
-                        {joker.type}
-                        </p>
+                <div className="w-[31%]" style={getBackground('rarity')}>
+                    <div style={getRarityBackground()}>
+                        <p className="text-center">{joker.rarity}</p>
                     </div>
-                    
-                    <div className="size-[25%]" style={getBackground('isScaling')}>
-                        <p>Scaling</p>
-                        <p>{joker.isScaling ? "Yes" : "No"}</p>
-                    </div>
-
-                    <div className="size-[25%] " style={getBackground('hasRNG')}>
-                        <p>RNG</p>
-                        <p>{joker.hasRNG ? "Yes" : "No"}</p>
-                    </div>
+                    <div className="rarity dropshadow"></div>
+                </div>
+                <div className="w-[16%]" style={getBackground('type')}>
+                    <p className="text-center">{joker.type}</p>
+                </div>
+                <div className="w-[16%]" style={getBackground('isScaling')}>
+                    <p className="text-center">{joker.isScaling ? "Yes" : "No"}</p>
+                </div>
+                <div className="w-[16%] " style={getBackground('hasRNG')}>
+                    <p className="text-center">{joker.hasRNG ? "Yes" : "No"}</p>
                 </div>
             </div>
         </div>
