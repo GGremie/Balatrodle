@@ -2,6 +2,7 @@ import { Rarity } from "@/data/enums/rarity.enum";
 import { Joker } from "@/data/types/joker.type";
 
 export default function CardInfos({ joker, toGuess }: { joker: Joker, toGuess: Joker }) {
+    const isWin = false
     const bgBase = {
         clipPath: "var(--corner-md)",
         padding: "10px",
@@ -24,18 +25,33 @@ export default function CardInfos({ joker, toGuess }: { joker: Joker, toGuess: J
     };
 
     const getRarityBackground = () => {
+        let color = {backgroundColor: 'var(--balatro-purple)'}
         if (joker.rarity == Rarity.COMMON) {
-
+            color = {backgroundColor: 'var(--balatro-blue)'}
+        }
+        else if (joker.rarity == Rarity.UNCOMMON) {
+            color = {backgroundColor: 'var(--balatro-green)'}
+        }
+        else if (joker.rarity == Rarity.RARE) {
+            color = {backgroundColor: 'var(--balatro-red)'}
         }
         return { 
+            ...color,
             clipPath: "var(--corner-md)",
-            backgroundColor: 'var(--rarity-rare)',
         }
     }
+
+    const getPriceSimbol = () => {
+        if (joker.price > toGuess.price) {
+            return <span>&gt;</span>
+        } else if (joker.price < toGuess.price) {
+            return <span>&lt;</span>
+        }
+        return ""
+    }
     
-    return (
+    return [
     <div className="flex justify-center items-center pl-5 pr-5">
-        {/* <div className="w-[10%] flex justify-center"> */}
         <img className="w-[10%] ml-[1%] mr-[1%]"
         src={`/images/${joker.name
             .replace(/ /g, "_")
@@ -51,7 +67,7 @@ export default function CardInfos({ joker, toGuess }: { joker: Joker, toGuess: J
             <div className="flex w-[100%] pl-[1%] gap-[1%]">
                 <div className="flex gap-2 w-[16%] justify-center" style={getBackground('price')}>
                     <p className="text-[var(--money-yellow)]">${joker.price}</p>
-                    <p>&gt;</p>
+                    <p className="rotate-90">{getPriceSimbol()}</p>
                 </div>
                 <div className="w-[31%]" style={getBackground('rarity')}>
                     <div style={getRarityBackground()}>
@@ -70,5 +86,6 @@ export default function CardInfos({ joker, toGuess }: { joker: Joker, toGuess: J
                 </div>
             </div>
         </div>
-    </div>
-)}
+    </div>,
+    isWin
+]}

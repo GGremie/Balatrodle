@@ -10,6 +10,20 @@ export default function Home() {
   const [guessJoker, setGuessJoker]= useState<Joker | null>(null);
   const [guessedJokers, setGuessedJokers]= useState<Joker[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [isWin, setIsWin] = useState(false);
+
+  const baseCorner = {
+    clipPath: "var(--corner-md)",
+    padding: "0.25rem 0.5rem"
+  }
+
+  const guessInputBackground = {
+    backgroundColor: "var(--balatro-grey)"
+  }
+  
+  const guessButtonBackground = {
+    backgroundColor: "var(--balatro-red)"
+  }
 
   const filteredJokers = jokers.filter(joker =>
     joker.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -26,10 +40,13 @@ export default function Home() {
 
   function handleGuessClick() {
     if (guessJoker) {
-      setJokers(prev => prev.filter(j => j.id !== guessJoker.id));
+      setJokers(jokers => jokers.filter(joker => joker.id !== guessJoker.id));
       setGuessedJokers([guessJoker, ...guessedJokers])
       setGuessJoker(null);
       setSearchTerm('');
+      if (CardInfos({joker: guessJoker, toGuess: dailyJoker})[1] == true) {
+        setIsWin(true)
+      }
     }
   }
   
@@ -37,7 +54,7 @@ export default function Home() {
     setGuessJoker(joker);
     setSearchTerm(joker.name);
     setIsSearching(false);
-  };
+  }
   
   return (
     <main className="flex justify-center h-[100%]">
@@ -45,10 +62,11 @@ export default function Home() {
         <h1 className="text-9xl font-semibold pt-5">
           Balatrodle
         </h1>
-        <div className="flex text-3xl">
-          <div style={{ position: 'relative' }}>
+        <div className="flex text-3xl gap-5">
+          <div style={{ position: "relative", width: "100%" }}>
             <input
               type="text"
+              className="pl-[1rem]"
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
@@ -56,15 +74,19 @@ export default function Home() {
               onFocus={() => setIsSearching(true)}
               onBlur={() => setIsSearching(false)}
               placeholder="Search for a Joker"
+              style={Object.assign({}, guessInputBackground, baseCorner)}
             />
             
             {isSearching && filteredJokers.length > 0 && (
-              <div className="flex flex-col overflow-auto absolute max-h-[20rem] z-1 bg-white text-black text-shadow-none">
+              <div 
+                className="flex flex-col overflow-auto absolute max-h-[20rem] w-[100%] z-1 bg-white text-black text-shadow-none"
+                style={baseCorner}
+              >
                 {filteredJokers.map(joker => (
                   <span
                     key={joker.id}
                     onMouseDown={() => handleSelectJoker(joker)}
-                    style={{ padding: '8px', cursor: 'pointer' }}
+                    style={{ padding: '0.5rem', cursor: 'pointer' }}
                   >
                     {joker.name}
                   </span>
@@ -72,7 +94,13 @@ export default function Home() {
               </div>
             )}
           </div>
-          <button onClick={handleGuessClick} disabled={!guessJoker}>
+          <button
+            onClick={handleGuessClick}
+            disabled={!guessJoker}
+            className="cursor-pointer"
+            type="submit"
+            style={Object.assign({}, guessButtonBackground, baseCorner)}
+          >
             Guess
           </button>
         </div>
@@ -86,10 +114,16 @@ export default function Home() {
         </div>
         <div className="flex flex-col gap-5 w-[100%] text-3xl">
           {guessedJokers.map((joker) => {
-            return (<CardInfos joker={joker} toGuess={dailyJoker} />)
+            return (<CardInfos key={joker.id} joker={joker} toGuess={dailyJoker} />)
           })}
         </div>
       </div>
+
+      {true && (
+        <div className="flex absolute w-[100%] h-[100%] z-2 bg-[var(--background-win)]">
+          <div>Centrer la div pour faire la popup de win</div>
+        </div>
+      )}
     </main>
   );
 }
