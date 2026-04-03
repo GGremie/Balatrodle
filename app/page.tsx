@@ -3,9 +3,11 @@ import { useState } from "react";
 import { Joker } from "@/data/types/joker.type";
 import { jokerList } from '@/data/jokerList'
 import CardInfos from "./components/cardInfos";
+import WinPopup from "./components/winPopup";
 
 export default function Home() {
   const [jokers, setJokers] = useState(jokerList);
+  const [tries, setTries] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [guessJoker, setGuessJoker]= useState<Joker | null>(null);
   const [guessedJokers, setGuessedJokers]= useState<Joker[]>([]);
@@ -14,7 +16,6 @@ export default function Home() {
 
   const baseCorner = {
     clipPath: "var(--corner-md)",
-    padding: "0.25rem 0.5rem"
   }
 
   const guessInputBackground = {
@@ -40,11 +41,13 @@ export default function Home() {
 
   function handleGuessClick() {
     if (guessJoker) {
+      let totalTries = tries
+      setTries(totalTries+=1)
       setJokers(jokers => jokers.filter(joker => joker.id !== guessJoker.id));
       setGuessedJokers([guessJoker, ...guessedJokers])
       setGuessJoker(null);
       setSearchTerm('');
-      if (CardInfos({joker: guessJoker, toGuess: dailyJoker})[1] == true) {
+      if (CardInfos({joker: guessJoker, dailyJoker: dailyJoker})[1] == true) {
         setIsWin(true)
       }
     }
@@ -66,7 +69,7 @@ export default function Home() {
           <div style={{ position: "relative", width: "100%" }}>
             <input
               type="text"
-              className="pl-[1rem]"
+              className="pl-[1rem] pr-[0.5rem] py-[0.25rem]"
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
@@ -79,7 +82,7 @@ export default function Home() {
             
             {isSearching && filteredJokers.length > 0 && (
               <div 
-                className="flex flex-col overflow-auto absolute max-h-[20rem] w-[100%] z-1 bg-white text-black text-shadow-none"
+                className="flex flex-col overflow-auto absolute max-h-[20rem] w-[100%] z-1 bg-white text-black text-shadow-none px-[0.5rem] py-[0.25rem]"
                 style={baseCorner}
               >
                 {filteredJokers.map(joker => (
@@ -97,7 +100,7 @@ export default function Home() {
           <button
             onClick={handleGuessClick}
             disabled={!guessJoker}
-            className="cursor-pointer"
+            className="cursor-pointer px-[0.5rem] py-[0.25rem]"
             type="submit"
             style={Object.assign({}, guessButtonBackground, baseCorner)}
           >
@@ -114,16 +117,12 @@ export default function Home() {
         </div>
         <div className="flex flex-col gap-5 w-[100%] text-3xl">
           {guessedJokers.map((joker) => {
-            return (<CardInfos key={joker.id} joker={joker} toGuess={dailyJoker} />)
+            return (<CardInfos key={joker.id} joker={joker} dailyJoker={dailyJoker} />)
           })}
         </div>
       </div>
 
-      {true && (
-        <div className="flex absolute w-[100%] h-[100%] z-2 bg-[var(--background-win)]">
-          <div>Centrer la div pour faire la popup de win</div>
-        </div>
-      )}
+      {true && <WinPopup tries={tries} dailyJoker={dailyJoker} />}
     </main>
   );
 }

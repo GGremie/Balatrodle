@@ -1,7 +1,7 @@
 import { Rarity } from "@/data/enums/rarity.enum";
 import { Joker } from "@/data/types/joker.type";
 
-export default function CardInfos({ joker, toGuess }: { joker: Joker, toGuess: Joker }) {
+export default function CardInfos({ joker, dailyJoker }: { joker: Joker, dailyJoker: Joker }) {
     const isWin = false
     const bgBase = {
         clipPath: "var(--corner-md)",
@@ -10,16 +10,16 @@ export default function CardInfos({ joker, toGuess }: { joker: Joker, toGuess: J
 
     const getBackground = (field: keyof Joker) => {
         if (field === 'price') {
-            if (joker.price === toGuess.price) {
+            if (joker.price === dailyJoker.price) {
                 return { ...bgBase, backgroundColor: "var(--guess-correct)" };
             }
-            if (Math.abs(joker.price - toGuess.price) <= 2) {
+            if (Math.abs(joker.price - dailyJoker.price) <= 2) {
                 return { ...bgBase, backgroundColor: "var(--guess-close)" };
             }
             return { ...bgBase, backgroundColor: "var(--guess-incorrect)" };
         }
         
-        return joker[field] === toGuess[field] 
+        return joker[field] === dailyJoker[field] 
             ? { ...bgBase,  backgroundColor: "var(--guess-correct)" } 
             : { ...bgBase, backgroundColor: "var(--guess-incorrect)" };
     };
@@ -42,9 +42,9 @@ export default function CardInfos({ joker, toGuess }: { joker: Joker, toGuess: J
     }
 
     const getPriceSimbol = () => {
-        if (joker.price > toGuess.price) {
+        if (joker.price > dailyJoker.price) {
             return <span>&gt;</span>
-        } else if (joker.price < toGuess.price) {
+        } else if (joker.price < dailyJoker.price) {
             return <span>&lt;</span>
         }
         return ""

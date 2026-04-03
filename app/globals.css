@@ -4,11 +4,13 @@
   height: 100%;
   
   --foreground: #ffffff;
-  --body-light: #3E4E51;
   --body-main: #172325FD;
+  --body-light: #3E4E51;
+  --body-lighter: #3a5055;
   --background-win: rgba(53, 189, 134, 0.4);
   
   --balatro-grey: #708386;
+  --balatro-light-grey: #a2acb9;
   --balatro-blue: #0093ff;
   --balatro-blue-shadow: #005CAB;
   --balatro-green: #35bd86;
@@ -17,6 +19,7 @@
   --balatro-red-shadow: #A92B23;
   --balatro-purple: #ab5bb5;
   --balatro-purple-shadow: #6D3574;
+  --balatro-lavender: #939cec;
   /*  drop-shadow(0 3px 0 #6D3574) */
   
   --corner-md: polygon(0px calc(100% - 12px),3px calc(100% - 12px),3px calc(100% - 6px),6px calc(100% - 6px),6px calc(100% - 3px),12px calc(100% - 3px),12px 100%,calc(100% - 12px) 100%,calc(100% - 12px) calc(100% - 3px),calc(100% - 6px) calc(100% - 3px),calc(100% - 6px) calc(100% - 6px),calc(100% - 3px) calc(100% - 6px),calc(100% - 3px) calc(100% - 12px),100% calc(100% - 12px),100% 12px,calc(100% - 3px) 12px,calc(100% - 3px) 6px,calc(100% - 6px) 6px,calc(100% - 6px) 3px,calc(100% - 12px) 3px,calc(100% - 12px) 0px,12px 0px,12px 3px,6px 3px,6px 6px,3px 6px,3px 12px,0px 12px);
