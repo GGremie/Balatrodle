@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next"
 import localFont from 'next/font/local';
 import background from '../public/site-background.jpg';
+import './globals.css';
 
 export const metadata: Metadata = {
   title: "Balatrodle",
