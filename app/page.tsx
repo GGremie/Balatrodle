@@ -9,6 +9,8 @@ export default function Home() {
   const [jokers, setJokers] = useState(jokerList);
   const [tries, setTries] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
+  const [searchClickPos, setSearchClickPos] = useState("0");
+  const [guessClickPos, setGuessClickPos] = useState("0");
   const [guessJoker, setGuessJoker]= useState<Joker | null>(null);
   const [guessedJokers, setGuessedJokers]= useState<Joker[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -19,7 +21,7 @@ export default function Home() {
   }
 
   const filteredJokers = jokers.filter(joker =>
-    joker.name.toLowerCase().includes(searchTerm.toLowerCase())
+    joker.name.toLowerCase().startsWith(searchTerm)
   );
   
   const randomSeed = (seed: number) => {
@@ -41,21 +43,25 @@ export default function Home() {
     return score;
   };
 
-  function handleGuessClick() {
-    if (guessJoker) {
-      setTries(tries => tries+1)      
-      setJokers(jokers => jokers.filter(joker => joker.id !== guessJoker.id));
-      setGuessedJokers([guessJoker, ...guessedJokers])
-      setGuessJoker(null);
-      setSearchTerm('');
-      if (calculateScore(guessJoker) == 5) {
-        setIsWin(true)
-      }
+  function handleGuess(event: React.FormEvent) {
+    event.preventDefault()
+    if (searchTerm.length == 0) return;
+
+    const guess = guessJoker ?? filteredJokers[0];
+    if (!guess) return;
+
+    setTries(tries => tries+1);
+    setJokers(jokers => jokers.filter(joker => joker.id !== guess.id));
+    setGuessedJokers([guess, ...guessedJokers]);
+    if (calculateScore(guess) == 5) {
+      setIsWin(true)
     }
+    setGuessJoker(null);
+    setSearchTerm('');
   }
   
   const handleSelectJoker = (joker: Joker) => {
-    setGuessJoker(joker);
+    setGuessJoker(joker);    
     setSearchTerm(joker.name);
     setIsSearching(false);
   }
@@ -66,26 +72,40 @@ export default function Home() {
         <h1 className="text-9xl font-semibold pt-5">
           Balatrodle
         </h1>
-        <div className="flex text-3xl gap-5">
+        <form className="flex text-3xl gap-5" onSubmit={handleGuess}>
           <div style={{ position: "relative", width: "100%" }}>
-            <div className="drop-shadow-[0_5px_0_var(--body-lighter)]">
+            <div className={searchClickPos === "0" ? "drop-shadow-[0_5px_0_var(--body-lighter)]": ""}>
               <input
                 type="text"
-                className="pl-[1rem] pr-[0.5rem] py-[0.25rem] bg-[var(--balatro-grey)]"
+                className="pl-[1rem] pr-[0.5rem] py-[0.25rem] bg-[var(--balatro-grey)] relative"
                 value={searchTerm}
                 onChange={(e) => {
                   setSearchTerm(e.target.value);
                 }}
                 onFocus={() => setIsSearching(true)}
                 onBlur={() => setIsSearching(false)}
+                onMouseDown={() => {setSearchClickPos("4px")}}
+                onMouseUp={() => {setSearchClickPos("0")}}
                 placeholder="Search for a Joker"
-                style={baseCorner}
+                style={Object.assign({}, baseCorner, {top: searchClickPos})}
               />
             </div>
 
-            {isSearching && filteredJokers.length > 0 && (
+            {isSearching && filteredJokers.length > 0 && searchTerm.length != 0 && (
               <div 
-                className="flex flex-col overflow-auto absolute max-h-[20rem] w-[100%] z-1 bg-white text-black text-shadow-none px-[0.5rem] py-[0.25rem]"
+                className="flex
+                  flex-col 
+                  overflow-auto
+                  absolute
+                  max-h-[20rem]
+                  w-[100%]
+                  z-1
+                  bg-white
+                  text-black
+                  text-shadow-none
+                  px-[0.5rem]
+                  py-[0.25rem]
+                  top-[49px]"
                 style={baseCorner}
               >
                 {filteredJokers.map(joker => (
@@ -100,18 +120,18 @@ export default function Home() {
               </div>
             )}
           </div>
-          <div className="drop-shadow-[0_5px_0_var(--balatro-red-shadow)]">
+          <div className={guessClickPos === "0" ? "drop-shadow-[0_5px_0_var(--balatro-red-shadow)]" : ""}>
             <button
-              onClick={handleGuessClick}
-              disabled={!guessJoker}
-              className="cursor-pointer px-[0.5rem] py-[0.25rem] bg-[var(--balatro-red)]"
+              onMouseDown={() => {setGuessClickPos("4px")}}
+              onMouseUp={() => {setGuessClickPos("0")}}
+              className="cursor-pointer px-[0.5rem] py-[0.25rem] bg-[var(--balatro-red)] relative"
               type="submit"
-              style={baseCorner}
+              style={Object.assign({}, baseCorner, {top: guessClickPos})}
               >
               Guess
             </button>
           </div>
-        </div>
+        </form>
         <div className="flex justify-between p-5 pb-0 text-3xl w-[100%]">
           <span className="w-[12%] text-center">Joker</span>
           <span className="w-[15%] text-center">Cost</span>
@@ -127,7 +147,7 @@ export default function Home() {
         </div>
       </div>
 
-      {isWin && <WinPopup tries={tries} dailyJoker={dailyJoker} />}
+      {isWin && <WinPopup tries={tries} dailyJoker={dailyJoker} onClose={() => setIsWin(false)} />}
     </main>
   );
 }

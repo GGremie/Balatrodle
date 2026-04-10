@@ -144,7 +144,7 @@ export default function CardInfos({
                     </div>
                 </div>
                 <div className="w-[16%]" style={getBackground('type')}>
-                    <p className="text-center">{renderType()}</p>
+                    <div className="text-center">{renderType()}</div>
                 </div>
                 <div className="w-[16%]" style={getBackground('isScaling')}>
                     <p className="text-center">{joker.isScaling ? "Yes" : "No"}</p>
