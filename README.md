@@ -1,6 +1,7 @@
 ## Balatrodle
 
-This game is like all the other -dle, but with balatro. There is one joker each day and you have to find it.
+This game is a wordle-like game, but with balatro !
+There is one joker each day and you have to find it.
 The project is made with [Next.js] bootstrapped with [`create-next-app`]
 
 ## Getting Started

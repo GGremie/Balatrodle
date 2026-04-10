@@ -1,6 +1,6 @@
 import { Rarity } from "@/data/enums/rarity.enum";
+import { Type } from "@/data/enums/type.enum";
 import { Joker } from "@/data/types/joker.type";
-import { Dispatch, SetStateAction } from "react";
 
 export default function CardInfos({ 
         joker,
@@ -31,6 +31,50 @@ export default function CardInfos({
             : { ...bgBase, backgroundColor: "var(--guess-incorrect)" };
     };
 
+    const renderType = () => {
+        if (joker.type == Type.CHIPSMULT) {
+            return (
+                <>
+                    <span className="text-[var(--balatro-blue)]">+</span>
+                    <span className="text-[var(--balatro-red)]">+</span>
+                </>
+            )
+        } else if (joker.type == Type.MULTMULT) {
+            return (
+                <span className="bg-[var(--balatro-red)] rounded-xl px-[0.5rem] py-[0.125rem]">
+                    {joker.type}
+                </span>
+            )
+        }
+        return (
+            <p style={getTypeColor()}>
+                {joker.type}
+            </p>
+        )
+    }
+
+    const getTypeColor = () => {
+        let textColor = {color: 'var(--balatro-blue)'}
+        if (joker.type == Type.ADDMULT) {
+            textColor = {color: 'var(--balatro-red)'}
+        }
+        else if (joker.type == Type.CHIPSMULT) {
+            textColor = {color: 'var()'}
+        }
+        else if (joker.type == Type.EFFECT) {
+            textColor = {color: 'var(--balatro-purple)'}
+        }
+        else if (joker.type == Type.RETRIGGER) {
+            textColor = {color: 'var(--balatro-green)'}
+        }
+        else if (joker.type == Type.ECONOMY) {
+            textColor = {color: 'var(--money-yellow)'}
+        }
+        return { 
+            ...textColor,
+        }
+    }
+
     const getRarityColor = () => {
         let color = {backgroundColor: 'var(--balatro-purple)'}
         if (joker.rarity == Rarity.COMMON) {
@@ -46,6 +90,22 @@ export default function CardInfos({
             ...color,
             clipPath: "var(--corner-md)",
         }
+    }
+
+    const getRarityShadowColor = () => {
+        let color = {filter: 'drop-shadow(0 4px 0 var(--balatro-purple-shadow))'}
+        if (joker.rarity == Rarity.COMMON) {
+            color = {filter: 'drop-shadow(0 4px 0 var(--balatro-blue-shadow))'}
+        }
+        else if (joker.rarity == Rarity.UNCOMMON) {
+            color = {filter: 'drop-shadow(0 4px 0 var(--balatro-green-shadow))'}
+        }
+        else if (joker.rarity == Rarity.RARE) {
+            color = {filter: 'drop-shadow(0 4px 0 var(--balatro-red-shadow))'}
+        }
+        return (
+            color
+        )
     }
 
     const getPriceSimbol = () => {
@@ -76,14 +136,15 @@ export default function CardInfos({
                     <p className="text-[var(--money-yellow)]">${joker.price}</p>
                     <p className="rotate-90">{getPriceSimbol()}</p>
                 </div>
-                <div className="w-[31%]" style={getBackground('rarity')}>
-                    <div style={getRarityColor()}>
-                        <p className="text-center">{joker.rarity}</p>
+                <div className="flex justify-center w-[31%]" style={getBackground('rarity')}>
+                    <div className="w-[11rem]" style={getRarityShadowColor()}>
+                        <div style={getRarityColor()}>
+                            <p className="text-center">{joker.rarity}</p>
+                        </div>
                     </div>
-                    <div className="rarity dropshadow"></div>
                 </div>
                 <div className="w-[16%]" style={getBackground('type')}>
-                    <p className="text-center">{joker.type}</p>
+                    <p className="text-center">{renderType()}</p>
                 </div>
                 <div className="w-[16%]" style={getBackground('isScaling')}>
                     <p className="text-center">{joker.isScaling ? "Yes" : "No"}</p>

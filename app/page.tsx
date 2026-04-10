@@ -1,5 +1,5 @@
 'use client'
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { Joker } from "@/data/types/joker.type";
 import { jokerList } from '@/data/jokerList'
 import CardInfos from "./components/cardInfos";
@@ -16,14 +16,6 @@ export default function Home() {
 
   const baseCorner = {
     clipPath: "var(--corner-md)",
-  }
-
-  const guessInputBackground = {
-    backgroundColor: "var(--balatro-grey)"
-  }
-  
-  const guessButtonBackground = {
-    backgroundColor: "var(--balatro-red)"
   }
 
   const filteredJokers = jokers.filter(joker =>
@@ -51,7 +43,7 @@ export default function Home() {
 
   function handleGuessClick() {
     if (guessJoker) {
-      setTries(tries => tries++)
+      setTries(tries => tries+1)      
       setJokers(jokers => jokers.filter(joker => joker.id !== guessJoker.id));
       setGuessedJokers([guessJoker, ...guessedJokers])
       setGuessJoker(null);
@@ -76,19 +68,21 @@ export default function Home() {
         </h1>
         <div className="flex text-3xl gap-5">
           <div style={{ position: "relative", width: "100%" }}>
-            <input
-              type="text"
-              className="pl-[1rem] pr-[0.5rem] py-[0.25rem]"
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-              }}
-              onFocus={() => setIsSearching(true)}
-              onBlur={() => setIsSearching(false)}
-              placeholder="Search for a Joker"
-              style={Object.assign({}, guessInputBackground, baseCorner)}
-            />
-            
+            <div className="drop-shadow-[0_5px_0_var(--body-lighter)]">
+              <input
+                type="text"
+                className="pl-[1rem] pr-[0.5rem] py-[0.25rem] bg-[var(--balatro-grey)]"
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                }}
+                onFocus={() => setIsSearching(true)}
+                onBlur={() => setIsSearching(false)}
+                placeholder="Search for a Joker"
+                style={baseCorner}
+              />
+            </div>
+
             {isSearching && filteredJokers.length > 0 && (
               <div 
                 className="flex flex-col overflow-auto absolute max-h-[20rem] w-[100%] z-1 bg-white text-black text-shadow-none px-[0.5rem] py-[0.25rem]"
@@ -106,15 +100,17 @@ export default function Home() {
               </div>
             )}
           </div>
-          <button
-            onClick={handleGuessClick}
-            disabled={!guessJoker}
-            className="cursor-pointer px-[0.5rem] py-[0.25rem]"
-            type="submit"
-            style={Object.assign({}, guessButtonBackground, baseCorner)}
-          >
-            Guess
-          </button>
+          <div className="drop-shadow-[0_5px_0_var(--balatro-red-shadow)]">
+            <button
+              onClick={handleGuessClick}
+              disabled={!guessJoker}
+              className="cursor-pointer px-[0.5rem] py-[0.25rem] bg-[var(--balatro-red)]"
+              type="submit"
+              style={baseCorner}
+              >
+              Guess
+            </button>
+          </div>
         </div>
         <div className="flex justify-between p-5 pb-0 text-3xl w-[100%]">
           <span className="w-[12%] text-center">Joker</span>
