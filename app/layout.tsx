@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import localFont from 'next/font/local'
-import background from '../public/site-background.jpg'
-import "./globals.css";
+import { Analytics } from "@vercel/analytics/next"
+import localFont from 'next/font/local';
+import background from '../public/site-background.jpg';
 
 export const metadata: Metadata = {
   title: "Balatrodle",
@@ -14,10 +14,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-[100%]">
-      <body className="bg-fixed bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url(${background.src})` }}>
-        {children}
-      </body>
-    </html>
+    <>
+      <html lang="en" className="h-[100%]">
+        <body className="bg-fixed bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url(${background.src})` }}>
+          {children}
+        </body>
+      </html>
+      <Analytics />
+    </>
   );
 }

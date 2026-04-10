@@ -1,8 +1,15 @@
 import { Rarity } from "@/data/enums/rarity.enum";
 import { Joker } from "@/data/types/joker.type";
+import { Dispatch, SetStateAction } from "react";
 
-export default function CardInfos({ joker, dailyJoker }: { joker: Joker, dailyJoker: Joker }) {
-    const isWin = false
+export default function CardInfos({ 
+        joker,
+        dailyJoker,
+
+    }: { 
+        joker: Joker,
+        dailyJoker: Joker,
+    }) {
     const bgBase = {
         clipPath: "var(--corner-md)",
         padding: "10px",
@@ -19,12 +26,12 @@ export default function CardInfos({ joker, dailyJoker }: { joker: Joker, dailyJo
             return { ...bgBase, backgroundColor: "var(--guess-incorrect)" };
         }
         
-        return joker[field] === dailyJoker[field] 
-            ? { ...bgBase,  backgroundColor: "var(--guess-correct)" } 
+        return joker[field] === dailyJoker[field]
+            ? { ...bgBase,  backgroundColor: "var(--guess-correct)" }
             : { ...bgBase, backgroundColor: "var(--guess-incorrect)" };
     };
 
-    const getRarityBackground = () => {
+    const getRarityColor = () => {
         let color = {backgroundColor: 'var(--balatro-purple)'}
         if (joker.rarity == Rarity.COMMON) {
             color = {backgroundColor: 'var(--balatro-blue)'}
@@ -50,7 +57,7 @@ export default function CardInfos({ joker, dailyJoker }: { joker: Joker, dailyJo
         return ""
     }
     
-    return [
+    return (
     <div className="flex justify-center items-center pl-5 pr-5">
         <img className="w-[10%] ml-[1%] mr-[1%]"
         src={`/images/${joker.name
@@ -70,7 +77,7 @@ export default function CardInfos({ joker, dailyJoker }: { joker: Joker, dailyJo
                     <p className="rotate-90">{getPriceSimbol()}</p>
                 </div>
                 <div className="w-[31%]" style={getBackground('rarity')}>
-                    <div style={getRarityBackground()}>
+                    <div style={getRarityColor()}>
                         <p className="text-center">{joker.rarity}</p>
                     </div>
                     <div className="rarity dropshadow"></div>
@@ -86,6 +93,5 @@ export default function CardInfos({ joker, dailyJoker }: { joker: Joker, dailyJo
                 </div>
             </div>
         </div>
-    </div>,
-    isWin
-]}
+    </div>
+)}

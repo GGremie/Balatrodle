@@ -1,5 +1,5 @@
 'use client'
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Joker } from "@/data/types/joker.type";
 import { jokerList } from '@/data/jokerList'
 import CardInfos from "./components/cardInfos";
@@ -39,15 +39,24 @@ export default function Home() {
   const index = Math.floor(randomSeed(today.getTime()) * jokerList.length)
   const dailyJoker = jokerList[index]
 
+  const calculateScore = (joker: Joker): number => {
+    let score = 0;
+    if (joker.price === dailyJoker.price) score++;
+    if (joker.rarity === dailyJoker.rarity) score++;
+    if (joker.type === dailyJoker.type) score++;
+    if (joker.isScaling === dailyJoker.isScaling) score++;
+    if (joker.hasRNG === dailyJoker.hasRNG) score++;
+    return score;
+  };
+
   function handleGuessClick() {
     if (guessJoker) {
-      let totalTries = tries
-      setTries(totalTries+=1)
+      setTries(tries => tries++)
       setJokers(jokers => jokers.filter(joker => joker.id !== guessJoker.id));
       setGuessedJokers([guessJoker, ...guessedJokers])
       setGuessJoker(null);
       setSearchTerm('');
-      if (CardInfos({joker: guessJoker, dailyJoker: dailyJoker})[1] == true) {
+      if (calculateScore(guessJoker) == 5) {
         setIsWin(true)
       }
     }
@@ -58,7 +67,7 @@ export default function Home() {
     setSearchTerm(joker.name);
     setIsSearching(false);
   }
-  
+
   return (
     <main className="flex justify-center h-[100%]">
       <div className="flex flex-col items-center gap-4 bg-(--body-main) w-[50%] h-[100%]">
@@ -117,12 +126,12 @@ export default function Home() {
         </div>
         <div className="flex flex-col gap-5 w-[100%] text-3xl">
           {guessedJokers.map((joker) => {
-            return (<CardInfos key={joker.id} joker={joker} dailyJoker={dailyJoker} />)
+            return (<CardInfos key={joker.id} joker={joker} dailyJoker={dailyJoker}/>)
           })}
         </div>
       </div>
 
-      {true && <WinPopup tries={tries} dailyJoker={dailyJoker} />}
+      {isWin && <WinPopup tries={tries} dailyJoker={dailyJoker} />}
     </main>
   );
 }
