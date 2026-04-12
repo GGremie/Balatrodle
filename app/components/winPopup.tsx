@@ -56,10 +56,10 @@ export default function WinPopup({tries, dailyJoker, onClose}: {tries: number, d
                 to   { transform: translateY(0); }
             }
             .win-backdrop {
-                animation: backdropIn 0.3s ease;
+                animation: backdropIn 0.2s ease;
             }
             .win-popup {
-                animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+                animation: slideUp 0.5s cubic-bezier(0.4, 1.31, 0.64, 1);
             }
         `}</style>
         <div className="win-backdrop flex absolute w-[100%] h-[100%] z-2 bg-[var(--background-win)] justify-center items-center">

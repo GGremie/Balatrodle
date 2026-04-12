@@ -4,6 +4,7 @@ import { Joker } from "@/data/types/joker.type";
 import { jokerList } from '@/data/jokerList'
 import CardInfos from "./components/cardInfos";
 import WinPopup from "./components/winPopup";
+import HelpPopup from "./components/helpPopup";
 
 export default function Home() {
   const [jokers, setJokers] = useState(jokerList);
@@ -11,10 +12,12 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchClickPos, setSearchClickPos] = useState("0");
   const [guessClickPos, setGuessClickPos] = useState("0");
+  const [helpClickPos, setHelpClickPos] = useState("0");
   const [guessJoker, setGuessJoker]= useState<Joker | null>(null);
   const [guessedJokers, setGuessedJokers]= useState<Joker[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [isWin, setIsWin] = useState(false);
+  const [isHelp, setIsHelp] = useState(false);
 
   const baseCorner = {
     clipPath: "var(--corner-md)",
@@ -66,6 +69,10 @@ export default function Home() {
     setIsSearching(false);
   }
 
+  const handleHelpClick = () => {
+    setIsHelp(true);
+  }
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {      
       if (e.key === 'Enter') {
@@ -77,7 +84,7 @@ export default function Home() {
 
   return (
     <main className="flex justify-center h-[100%]">
-      <div className="flex flex-col items-center gap-4 bg-(--body-main) w-[50%] h-[100%]">
+      <div className="flex relative flex-col items-center gap-4 bg-(--body-main) w-[50%] h-[100%]">
         <h1 className="text-9xl font-semibold pt-5">
           Balatrodle
         </h1>
@@ -154,9 +161,26 @@ export default function Home() {
             return (<CardInfos key={joker.id} joker={joker} dailyJoker={dailyJoker}/>)
           })}
         </div>
+
+        <div className={"absolute right-5 top-5 " + (helpClickPos === "0" ? "drop-shadow-[0_5px_0_var(--balatro-red-shadow)]" : "")}>
+          <button
+            className="
+            text-2xl
+            cursor-pointer
+            px-[1rem]
+            py-[0.5rem]
+            bg-[var(--balatro-red)]
+            relative"
+            onMouseDown={() => {setHelpClickPos("4px")}}
+            onMouseUp={() => {setHelpClickPos("0")}}
+            onClick={handleHelpClick}
+            style={Object.assign({}, baseCorner,  {top: helpClickPos})}
+            >?</button>
+          </div>
       </div>
 
       {isWin && <WinPopup tries={tries} dailyJoker={dailyJoker} onClose={() => setIsWin(false)} />}
+      {isHelp && <HelpPopup onClose={() => setIsHelp(false)} />}
     </main>
   );
 }
