@@ -21,4 +21,4 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 ## Deployed on Vercel
 
 You can find the latest version deployed on Vercel.
-[Balatrodle](balatrodl.vercel.app)
+[Balatrodle](https://balatrodl.vercel.app)
