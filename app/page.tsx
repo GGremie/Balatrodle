@@ -1,5 +1,5 @@
 'use client'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Joker } from "@/data/types/joker.type";
 import { jokerList } from '@/data/jokerList'
 import CardInfos from "./components/cardInfos";
@@ -43,8 +43,8 @@ export default function Home() {
     return score;
   };
 
-  function handleGuess(event: React.FormEvent) {
-    event.preventDefault()
+  function handleGuess(event?: React.FormEvent) {
+    event?.preventDefault()
     if (searchTerm.length == 0) return;
 
     const guess = guessJoker ?? filteredJokers[0];
@@ -65,6 +65,15 @@ export default function Home() {
     setSearchTerm(joker.name);
     setIsSearching(false);
   }
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {      
+      if (e.key === 'Enter') {
+        handleGuess()}
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  });
 
   return (
     <main className="flex justify-center h-[100%]">
