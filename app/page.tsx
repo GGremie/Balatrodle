@@ -5,12 +5,8 @@ import { jokerList } from '@/data/jokerList'
 import CardInfos from "./components/cardInfos";
 import WinPopup from "./components/winPopup";
 import HelpPopup from "./components/helpPopup";
-import { useLocalStorage } from "./useLocalStorage";
-import dynamic from "next/dynamic";
 
 export default function Home() {
-  const [triedJokers, setTriedJokers] = useLocalStorage<string[]>("triedJokers", []);
-
   const [jokers, setJokers] = useState(jokerList);
   const [tries, setTries] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,9 +14,7 @@ export default function Home() {
   const [guessClickPos, setGuessClickPos] = useState("0");
   const [helpClickPos, setHelpClickPos] = useState("0");
   const [guessJoker, setGuessJoker]= useState<Joker | null>(null);
-  const [guessedJokers, setGuessedJokers]= useState<Joker[]>(jokerList.filter(joker => 
-    triedJokers.includes(joker.name)
-  ))
+  const [guessedJokers, setGuessedJokers]= useState<Joker[]>([])
   const [isSearching, setIsSearching] = useState(false);
   const [isWin, setIsWin] = useState(false);
   const [isHelp, setIsHelp] = useState(false);
@@ -65,7 +59,6 @@ export default function Home() {
     if (calculateScore(guess) == 5) {
       setIsWin(true)
     }
-    setTriedJokers(prevTried => { return [...prevTried, guess.name] })
     setGuessJoker(null);
     setSearchTerm('');
   }
@@ -88,6 +81,27 @@ export default function Home() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   });
+
+  useEffect(() => {
+    if (guessedJokers.length === 0) return
+    localStorage.setItem('guessedJokers', JSON.stringify(guessedJokers))
+  }, [guessedJokers])
+
+  useEffect(() => {
+    const guessedJokersLocalStorage = localStorage.getItem('guessedJokers')
+
+    const parsedGuessedJokers: Joker[] =
+      guessedJokersLocalStorage !== null
+      ? JSON.parse(guessedJokersLocalStorage)
+      : []
+
+    setGuessedJokers(parsedGuessedJokers)
+    setJokers(jokers => jokers.filter(joker => !parsedGuessedJokers.some(guess => guess.id === joker.id)))
+    console.log(jokers);
+    console.log(parsedGuessedJokers);
+    
+  }, [])
+
 
   return (
     <main className="flex justify-center h-[100%]">
@@ -164,7 +178,7 @@ export default function Home() {
           <span className="w-[15%] text-center">RNG</span>
         </div>
         <div className="flex flex-col gap-5 w-[100%] text-3xl">
-          {guessedJokers.map((joker) => {        
+          {guessedJokers.map((joker) => {
             return (<CardInfos key={joker.id} joker={joker} dailyJoker={dailyJoker}/>)
           })}
         </div>

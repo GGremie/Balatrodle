@@ -1,12 +1,9 @@
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 
 function getStorageValue<T>(key: string, defaultValue: T): T {
-    if (typeof window !== "undefined") {
-        const saved = localStorage.getItem(key);
-        if (!saved) return defaultValue; 
-        return JSON.parse(saved ?? "") as T;
-    }
-    return defaultValue;
+  const saved = localStorage.getItem(key);
+  if (!saved) return defaultValue; 
+  return JSON.parse(saved ?? "") as T;
 }
 
 export const useLocalStorage = <T>(key: string, defaultValue: T): [T, Dispatch<SetStateAction<T>>] => {
