@@ -1,3 +1,4 @@
+'use client'
 import { Rarity } from "@/data/enums/rarity.enum";
 import { Type } from "@/data/enums/type.enum";
 import { Joker } from "@/data/types/joker.type";
@@ -127,19 +128,18 @@ export default function CardInfos({
     };
 
     return (
-    <>
-        <style>{`
-            .rotate:hover {
-                transform: rotate3d(${mousePosition.y}, ${-mousePosition.x}, 0, 45deg)
-            }
-        `}</style>
         <div className="flex justify-center items-center pl-5 pr-5">
-            <img onMouseMove={onMouseMove} className="rotate w-[10%] ml-[1%] mr-[1%]"
-            src={`/images/${joker.name
-                .replace(/ /g, "_")
-                .replace(/'/g, "")
-                .replace(/!/g, "")
-                .replace(/é/g, "e")}.png`}
+            <img onMouseMove={onMouseMove}
+                onMouseLeave={() => setMousePosition({x: 0, y: 0})}
+                className="w-[10%] ml-[1%] mr-[1%]"
+                style={{
+                    transform: `rotate3d(${mousePosition.y}, ${-mousePosition.x}, 0, 45deg)`
+                }}
+                src={`/images/${joker.name
+                    .replace(/ /g, "_")
+                    .replace(/'/g, "")
+                    .replace(/!/g, "")
+                    .replace(/é/g, "e")}.png`}
                 alt={joker.name + " Image"}
                 />
             <div className="flex flex-col w-[88%]">
@@ -170,5 +170,5 @@ export default function CardInfos({
                 </div>
             </div>
         </div>
-    </>
-)}
+    )
+}
