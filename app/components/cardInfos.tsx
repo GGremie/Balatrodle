@@ -122,26 +122,32 @@ export default function CardInfos({
 
     const onMouseMove = (e: React.MouseEvent) => {
         let rect = e.currentTarget.getBoundingClientRect();
-        const x = Math.round((e.clientX - rect.left) - rect.width/2);
-        const y = Math.round((e.clientY - rect.top) - rect.height/2);
+        const x = -((e.clientY - rect.top - rect.height/2)/(rect.height/2))*12;
+        const y = ((e.clientX - rect.left - rect.width/2)/(rect.width/2))*12;
         setMousePosition({x, y})
     };
 
     return (
         <div className="flex justify-center items-center pl-5 pr-5">
-            <img onMouseMove={onMouseMove}
+            <div className="w-[10%]"
+                onMouseMove={onMouseMove}
                 onMouseLeave={() => setMousePosition({x: 0, y: 0})}
-                className="w-[10%] ml-[1%] mr-[1%]"
                 style={{
-                    transform: `rotate3d(${mousePosition.y}, ${-mousePosition.x}, 0, 45deg)`
-                }}
-                src={`/images/${joker.name
-                    .replace(/ /g, "_")
-                    .replace(/'/g, "")
-                    .replace(/!/g, "")
-                    .replace(/é/g, "e")}.png`}
-                alt={joker.name + " Image"}
-                />
+                    boxSizing: "border-box",
+                    transformStyle: "preserve-3d",
+                    transition: "0.1s cubic-bezier(0.03, 0.98, 0.52, 0.99)",
+                    transform: `rotateX(${mousePosition.x}deg) rotateY(${mousePosition.y}deg)`,
+                    willChange: "transform",
+                }}>
+                <img className="ml-[1%] mr-[1%]"
+                    src={`/images/${joker.name
+                        .replace(/ /g, "_")
+                        .replace(/'/g, "")
+                        .replace(/!/g, "")
+                        .replace(/é/g, "e")}.png`}
+                        alt={joker.name + " Image"}
+                    />
+            </div>
             <div className="flex flex-col w-[88%]">
                 <p className="text-center pb-2">
                     {joker.name}

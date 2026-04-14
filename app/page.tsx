@@ -56,7 +56,7 @@ export default function Home() {
     setTries(tries => tries+1);
     setJokers(jokers => jokers.filter(joker => joker.id !== guess.id));
     setGuessedJokers([guess, ...guessedJokers]);
-    if (calculateScore(guess) == 5) {
+    if (guess.id == dailyJoker.id) {
       setIsWin(true)
     }
     setGuessJoker(null);
@@ -83,23 +83,30 @@ export default function Home() {
   });
 
   useEffect(() => {
-    if (guessedJokers.length === 0) return
-    localStorage.setItem('guessedJokers', JSON.stringify(guessedJokers))
-  }, [guessedJokers])
+    if (guessedJokers.length === 0) return;
+    const expiry = new Date();
+    expiry.setHours(24, 0, 0, 0);
+    const guessPayload = { expiryDate: expiry.getTime(), guessedJokers };
+    localStorage.setItem("guessedJokers", JSON.stringify(guessPayload));
+  }, [guessedJokers]);
 
   useEffect(() => {
-    const guessedJokersLocalStorage = localStorage.getItem('guessedJokers')
-
+    const currentDate = new Date().getTime();
+    const guessedJokersLocalStorage = JSON.parse(localStorage.getItem("guessedJokers") ?? "{}");
+    
+    console.log(currentDate > guessedJokersLocalStorage.expiryDate)
+    if (currentDate > guessedJokersLocalStorage.expiryDate) {
+      localStorage.clear();
+      return;
+    }
+ 
     const parsedGuessedJokers: Joker[] =
-      guessedJokersLocalStorage !== null
-      ? JSON.parse(guessedJokersLocalStorage)
+      guessedJokersLocalStorage.guessedJokers !== undefined
+      ? guessedJokersLocalStorage.guessedJokers
       : []
 
     setGuessedJokers(parsedGuessedJokers)
     setJokers(jokers => jokers.filter(joker => !parsedGuessedJokers.some(guess => guess.id === joker.id)))
-    console.log(jokers);
-    console.log(parsedGuessedJokers);
-    
   }, [])
 
 

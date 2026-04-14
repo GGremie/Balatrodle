@@ -79,7 +79,7 @@ export default function WinPopup({tries, dailyJoker, onClose}: {tries: number, d
                             <div className="flex flex-col gap-7 w-[55%]">
                                 <div className="flex justify-between text-center bg-[var(--balatro-light-grey)] p-[0.25rem]" style={baseCorner}>
                                     <span className="w-[75%]">Streak</span>
-                                    <span className="bg-[var(--body-main)] w-[25%]" style={baseCorner}>{tries}</span>
+                                    <span className="bg-[var(--body-main)] w-[25%]" style={baseCorner}>{localStorage.getItem("currentStreak")}</span>
                                 </div>
                                 <div className="flex justify-between text-center bg-[var(--balatro-light-grey)] p-[0.25rem]" style={baseCorner}>
                                     <span className="w-[75%]">Tries</span>
