@@ -10,9 +10,11 @@ export default function Home() {
   const [jokers, setJokers] = useState(jokerList);
   const [tries, setTries] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedJoker, setSelectedJoker] = useState(-1);
   const [searchClickPos, setSearchClickPos] = useState("0");
   const [guessClickPos, setGuessClickPos] = useState("0");
   const [helpClickPos, setHelpClickPos] = useState("0");
+  const [hoveredJokerId, setHoveredJokerId] = useState<number | null>(null);
   const [guessJoker, setGuessJoker]= useState<Joker | null>(null);
   const [guessedJokers, setGuessedJokers]= useState<Joker[]>([])
   const [isSearching, setIsSearching] = useState(false);
@@ -50,8 +52,13 @@ export default function Home() {
     event?.preventDefault()
     if (searchTerm.length == 0) return;
 
-    const guess = guessJoker ?? filteredJokers[0];
-    if (!guess) return;
+    let guess
+    if (selectedJoker > -1) {
+      guess = filteredJokers[selectedJoker];
+    } else {
+      guess = guessJoker ?? filteredJokers[0];
+      if (!guess) return;
+    }
 
     setTries(tries => tries+1);
     setJokers(jokers => jokers.filter(joker => joker.id !== guess.id));
@@ -60,6 +67,7 @@ export default function Home() {
       setIsWin(true)
     }
     setGuessJoker(null);
+    setSelectedJoker(-1)
     setSearchTerm('');
   }
   
@@ -73,10 +81,29 @@ export default function Home() {
     setIsHelp(true);
   }
 
+  const handleArrowDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (filteredJokers.length === 0) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setSelectedJoker(index =>
+        index < filteredJokers.length - 1 ? index + 1 : 0
+      );
+    }
+
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setSelectedJoker(index =>
+        index > 0 ? index - 1 : filteredJokers.length - 1
+      );
+    }    
+  };
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {      
       if (e.key === 'Enter') {
-        handleGuess()}
+        handleGuess()
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
@@ -127,9 +154,10 @@ export default function Home() {
                   setSearchTerm(e.target.value);
                 }}
                 onFocus={() => setIsSearching(true)}
-                onBlur={() => setIsSearching(false)}
+                onBlur={() => {setIsSearching(false); setSelectedJoker(-1)}}
                 onMouseDown={() => {setSearchClickPos("4px")}}
                 onMouseUp={() => {setSearchClickPos("0")}}
+                onKeyDown={handleArrowDown}
                 placeholder="Search for a Joker"
                 style={Object.assign({}, baseCorner, {top: searchClickPos})}
               />
@@ -152,11 +180,16 @@ export default function Home() {
                   top-[49px]"
                 style={baseCorner}
               >
-                {filteredJokers.map(joker => (
+                {filteredJokers.map((joker, index) => (
                   <span
                     key={joker.id}
                     onMouseDown={() => handleSelectJoker(joker)}
-                    style={{ padding: '0.5rem', cursor: 'pointer' }}
+                    style={Object.assign({}, {
+                      padding: '0.5rem',
+                      cursor: 'pointer',
+                      background: hoveredJokerId === joker.id || selectedJoker === index ? "var(--balatro-light-grey)" : "" }, baseCorner)}
+                    onMouseEnter={() => {setHoveredJokerId(joker.id)}}
+                    onMouseLeave={() => {setHoveredJokerId(null)}}
                   >
                     {joker.name}
                   </span>

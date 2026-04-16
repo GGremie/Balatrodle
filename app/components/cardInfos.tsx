@@ -122,8 +122,9 @@ export default function CardInfos({
 
     const onMouseMove = (e: React.MouseEvent) => {
         let rect = e.currentTarget.getBoundingClientRect();
-        const x = -((e.clientY - rect.top - rect.height/2)/(rect.height/2))*12;
-        const y = ((e.clientX - rect.left - rect.width/2)/(rect.width/2))*12;
+        let x = ((e.clientY - rect.top - rect.height/2)/(rect.height/2))*12;
+        let y = ((e.clientX - rect.left - rect.width/2)/(rect.width/2))*12;
+        if (x<0) y = -y
         setMousePosition({x, y})
     };
 

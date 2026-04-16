@@ -26,7 +26,7 @@ export default function HelpPopup({onClose}: {onClose: () => void}) {
             className="win-popup w-[30%] h-[60%] bg-[var(--balatro-light-grey)] p-[0.25rem]"
             style={baseCorner}
             >
-            <div className="flex flex-col items-center text-center w-[100%] h-[100%] gap-5 bg-[var(--body-main)] text-2xl relative" style={baseCorner}>                
+            <div className="flex flex-col items-center text-center w-[100%] h-[100%] gap-5 bg-[var(--body-main)] text-2xl relative overflow-auto" style={baseCorner}>                
                 <h1 className="text-5xl pt-5">
                     How to play
                 </h1>
