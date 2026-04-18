@@ -38,6 +38,9 @@ export default function HelpPopup({onClose}: {onClose: () => void}) {
                     <div className="bg-[var(--guess-close)] p-4 w-[33%]" style={baseCorner}>Close</div>
                     <div className="bg-[var(--guess-incorrect)] p-4 w-[33%]" style={baseCorner}>Incorrect</div>
                 </div>
+                <span className="w-[60%]">
+                    If all the clues are correct, an additional name clue will be revealed.
+                </span>
                 <div className="flex flex-col gap-2 w-[60%]">
                     <p>
                         <span className="text-[var(--ante-orange)]">Cost </span>
