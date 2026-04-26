@@ -1,8 +1,11 @@
 import { Joker } from "@/data/types/joker.type"
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import WinParticles from "./winParticles";
 
 export default function WinPopup({tries, dailyJoker, onClose}: {tries: number, dailyJoker: Joker, onClose: () => void}) {
     const [timeLeft, setTimeLeft] = useState(getTimeRemaining());
+    const [mousePosition, setMousePosition] = useState({x: 0, y: 0});
+    const jimboRef = useRef<HTMLDivElement>(null)
 
     const baseCorner = {
         clipPath: "var(--corner-md)",
@@ -25,9 +28,17 @@ export default function WinPopup({tries, dailyJoker, onClose}: {tries: number, d
         return Math.max(tomorrow.getTime() - now.getTime(), 0);
     }
 
+    const onMouseMove = (e: React.MouseEvent) => {
+        let rect = e.currentTarget.getBoundingClientRect();
+        let x = ((e.clientY - rect.top - rect.height/2)/(rect.height/2))*12;
+        let y = ((e.clientX - rect.left - rect.width/2)/(rect.width/2))*12;
+        if (x<0) y = -y
+        setMousePosition({x, y})
+    };
+
     useEffect(() => {
         const interval: ReturnType<typeof setInterval> = setInterval(() => {
-        setTimeLeft(getTimeRemaining());
+            setTimeLeft(getTimeRemaining());
         }, 1000);
 
         return () => clearInterval(interval);
@@ -62,12 +73,25 @@ export default function WinPopup({tries, dailyJoker, onClose}: {tries: number, d
                 animation: slideUp 0.5s cubic-bezier(0.4, 1.31, 0.64, 1);
             }
         `}</style>
-        <div className="win-backdrop flex absolute w-[100%] h-[100%] z-2 bg-[var(--background-win)] justify-center items-center">
-            <div className="w-[40%] text-center">
-                I am the joker
+        <div className="win-backdrop flex absolute gap-[32rem] w-[100%] h-[100%] z-2 bg-[var(--background-win)] justify-center items-center">
+            <div className="w-[10rem] h-[13.375rem] text-center" ref={jimboRef}>
+                <WinParticles originRef={jimboRef}/>
+                <img className="w-[100%] h-[100%]"
+                    src="/images/Joker.png"
+                    alt="Joker Image"
+                    onMouseMove={onMouseMove}
+                    onMouseLeave={() => setMousePosition({x: 0, y: 0})}
+                    style={{
+                        boxSizing: "border-box",
+                        transformStyle: "preserve-3d",
+                        transition: "0.1s cubic-bezier(0.03, 0.98, 0.52, 0.99)",
+                        transform: `rotateX(${mousePosition.x}deg) rotateY(${mousePosition.y}deg)`,
+                        willChange: "transform",
+                    }}
+                />
             </div>
             <div 
-                className="win-popup w-[32%] h-[67%] bg-[var(--balatro-lavender)] p-[0.25rem]"
+                className="win-popup w-[25%] h-[67%] bg-[var(--balatro-lavender)] p-[0.25rem]"
                 style={baseCorner}
                 >
                 <div className="flex flex-col items-center w-[100%] h-[100%] bg-[var(--body-main)] relative" style={baseCorner}>
@@ -100,8 +124,8 @@ export default function WinPopup({tries, dailyJoker, onClose}: {tries: number, d
                                             .replace(/'/g, "")
                                             .replace(/!/g, "")
                                             .replace(/é/g, "e")}.png`}
-                                            alt={dailyJoker.name + " Image"}
-                                            />
+                                        alt={dailyJoker.name + " Image"}
+                                        />
                                 </div>
                             </div>
                         </div>

@@ -165,12 +165,12 @@ export default function Home() {
                 }}
                 onFocus={() => setIsSearching(true)}
                 onBlur={() => {setIsSearching(false); setSelectedJoker(-1)}}
-                onMouseDown={() => {if (isWin) setSearchClickPos("4px")}}
-                onMouseUp={() => {if (isWin) setSearchClickPos("0")}}
+                onMouseDown={() => {if (!isWin) setSearchClickPos("4px")}}
+                onMouseUp={() => {if (!isWin) setSearchClickPos("0")}}
                 onKeyDown={handleArrowDown}
                 placeholder="Search for a Joker"
                 style={Object.assign({}, baseCorner, {top: searchClickPos})}
-                disabled={!isWin}
+                disabled={isWin}
               />
             </div>
 
@@ -210,8 +210,8 @@ export default function Home() {
           </div>
           <div className={guessClickPos === "0" ? "drop-shadow-[0_5px_0_var(--balatro-red-shadow)]" : ""}>
             <button
-              onMouseDown={() => {if (isWin) setGuessClickPos("4px")}}
-              onMouseUp={() => {if (isWin) setGuessClickPos("0")}}
+              onMouseDown={() => {if (!isWin) setGuessClickPos("4px")}}
+              onMouseUp={() => {if (!isWin) setGuessClickPos("0")}}
               className="cursor-pointer px-[0.5rem] py-[0.25rem] bg-[var(--balatro-red)] relative"
               type="submit"
               style={Object.assign({}, baseCorner, {top: guessClickPos})}
