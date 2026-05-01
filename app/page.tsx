@@ -11,6 +11,7 @@ export default function Home() {
   const [tries, setTries] = useState(0);
   const [selectedJoker, setSelectedJoker] = useState(-1);
   const [nameHintNum, setNameHintNum] = useState(0);
+  const [currentStreak, setCurrentStreak] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchClickPos, setSearchClickPos] = useState("0");
   const [guessClickPos, setGuessClickPos] = useState("0");
@@ -67,6 +68,7 @@ export default function Home() {
     setJokers(jokers => jokers.filter(joker => joker.id !== guess.id));
     setGuessedJokers([guess, ...guessedJokers]);
     if (guess.id == dailyJoker.id) {
+      setCurrentStreak(streak => streak + 1)
       setIsWin(true)
     } else if (calculateScore(guess) == 5) {
       setIsNameHint(true)
@@ -126,22 +128,40 @@ export default function Home() {
   }, [guessedJokers]);
 
   useEffect(() => {
+    if (!isWin) return;
+    const winDate = new Date();
+    winDate.setHours(24, 0, 0, 0);
+    const winPayload = { lastWinDate: winDate.getTime(), currentStreak };
+    localStorage.setItem("currentStreak", JSON.stringify(winPayload));
+  }, [isWin])
+
+  useEffect(() => {
     const currentDate = new Date().getTime();
     const guessedJokersLocalStorage = JSON.parse(localStorage.getItem("guessedJokers") ?? "{}");
+    const currentStreakLocalStorage = JSON.parse(localStorage.getItem("currentStreak") ?? "{}");
     
     if (currentDate > guessedJokersLocalStorage.expiryDate) {
-      localStorage.clear();
+      localStorage.removeItem("guessedJokers");
       return;
     }
+    
     const parsedGuessedJokers: Joker[] =
-      guessedJokersLocalStorage.guessedJokers !== undefined
-      ? guessedJokersLocalStorage.guessedJokers
-      : []
+    guessedJokersLocalStorage.guessedJokers !== undefined
+    ? guessedJokersLocalStorage.guessedJokers
+    : []
     
     setGuessedJokers(parsedGuessedJokers)
     setJokers(jokers => jokers.filter(joker => !parsedGuessedJokers.some(guess => guess.id === joker.id)))
+    console.log('expiry', currentStreakLocalStorage.lastWinDate + 86_400_000);
+    console.log('date', currentDate);
+    console.log(currentStreakLocalStorage.currentStreak);
+    
+    console.log(currentStreakLocalStorage.lastWinDate + 86_400_000 >= currentDate);
+    if (currentStreakLocalStorage.lastWinDate + 86_400_000 >= currentDate) {
+      setCurrentStreak(currentStreakLocalStorage.currentStreak)
+    }
   }, [])
-
+  
   useEffect(() => {
     if (nameHintNum === 0) return;
     setNameHint(prev => prev.substring(0, nameHintNum-1) + dailyJoker.name[nameHintNum-1] + prev.substring(nameHintNum))
@@ -238,6 +258,17 @@ export default function Home() {
           })}
         </div>
 
+        <div className="absolute right-18 top-6">
+          <button className="
+            text-2xl
+            cursor-pointer
+            px-[1.5rem]
+            py-[0.5rem]
+            bg-[var(--balatro-red)]
+            relative"
+            style={Object.assign({}, baseCorner)}
+            >{ currentStreak }</button>
+        </div>
         <div className={"absolute right-5 top-5 " + (helpClickPos === "0" ? "drop-shadow-[0_5px_0_var(--balatro-red-shadow)]" : "")}>
           <button
             className="

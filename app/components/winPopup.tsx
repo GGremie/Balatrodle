@@ -10,6 +10,7 @@ export default function WinPopup({tries, dailyJoker, onClose}: {tries: number, d
     const baseCorner = {
         clipPath: "var(--corner-md)",
     }
+    const streak = JSON.parse(localStorage.getItem('currentStreak') ?? '{}').currentStreak
 
     const randomSeed = (seed: number) => {
         const x = Math.sin(seed) * 10000;
@@ -103,7 +104,7 @@ export default function WinPopup({tries, dailyJoker, onClose}: {tries: number, d
                             <div className="flex flex-col gap-7 w-[55%]">
                                 <div className="flex justify-between text-center bg-[var(--balatro-light-grey)] p-[0.25rem]" style={baseCorner}>
                                     <span className="w-[75%]">Streak</span>
-                                    <span className="bg-[var(--body-main)] w-[25%]" style={baseCorner}>{localStorage.getItem("currentStreak")}</span>
+                                    <span className="bg-[var(--body-main)] w-[25%]" style={baseCorner}>{streak}</span>
                                 </div>
                                 <div className="flex justify-between text-center bg-[var(--balatro-light-grey)] p-[0.25rem]" style={baseCorner}>
                                     <span className="w-[75%]">Tries</span>
